@@ -21,30 +21,30 @@ $(document).ready(function(){
 
 # HTML Code Recommendations 
 ------------------------------------------------------
-      <label>اختر العنصر </label>
-      <div id="droploader">اضغط هنا لاختيار العنصر </div>
+      <label>اختر العنصر </label> <br/>
+      <div id="droploader">اضغط هنا لاختيار العنصر </div> <br/>
 
 # OnChange Event Triggering 
 ------------------------------------------------------
-$(PARENT-CLASS-OR-ID).on("click",".balancer-item",function(){
-    // do your onchage code here what ever it was . 
-    # Can We Access Requested Data ? 
-       yes like the next step but with small changes 
-      > $(this).data("Name");         // will return the name 
-      > $(this).data("Id");           // will return the Id 
-      > $(this).data("Barcode");      // will return the BarCode
+$(PARENT-CLASS-OR-ID).on("click",".balancer-item",function(){ <br/>
+    // do your onchage code here what ever it was .  <br/>
+    # Can We Access Requested Data ?  <br/>
+       yes like the next step but with small changes  <br/>
+      > $(this).data("Name");         // will return the name  <br/>
+      > $(this).data("Id");           // will return the Id  <br/>
+      > $(this).data("Barcode");      // will return the BarCode <br/>
 
 });
 # Accessing The Selected Element Data  
 ------------------------------------------------------
-> you have to know that in your requested array param the requested 
-  data will be the same as you typed in the first action 
+> you have to know that in your requested array param the requested  <br/>
+  data will be the same as you typed in the first action  <br/>
   
-  Example For Getting Name: 
-    > div id is as you decalred before in HTML ( droploader ) 
-    > our requested data was ["Id", "BarCode", "Name"] 
-    > $("#droploader").data("Name");     // will return the name 
-    > $("#droploader").data("Id");     // will return the Id 
-    > $("#droploader").data("Barcode");     // will return the BarCode
+  Example For Getting Name: <br/>
+    > div id is as you decalred before in HTML ( droploader )  <br/>
+    > our requested data was ["Id", "BarCode", "Name"]  <br/>
+    > $("#droploader").data("Name");     // will return the name  <br/>
+    > $("#droploader").data("Id");     // will return the Id  <br/>
+    > $("#droploader").data("Barcode");     // will return the BarCode <br/>
     
  
