@@ -1,12 +1,7 @@
 
-var placeholder = "", t = 2, newEnd = 0 , startId = 1,
-    container , 
-    searchContainer ,
-    dataFloater,
-    balancerInnerWrapper,
-    searchInput;
+var placeholder = "";
 // pend controllers function that is responsible for all dom controller implementations 
-function pendControllers(selectorId) {
+function pendControllersDrop(selectorId) {
     placeholder = $(selectorId).html();
     $(selectorId).addClass("balancer-main-input form-control input-sm").parent("div").addClass("balancer-outer-wrapper");
     $(selectorId).parent("div").append('<i class="fa fa-caret-down caretIcon balancer-icon" style="left: 14 % "></i>\
@@ -24,7 +19,14 @@ function Resetdropdownlist(selectorId) {
     $(selectorId).html(placeholder);
 }
 // the main brain for the drop down list controllers 
-function dropdownlist(selectorId, dataApi, searchApi, startParam, endParam, searchParam, hiddenRequests, visiableRequests, endId = 250 ) {
+function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endParam, searchParam, hiddenRequests, visiableRequests, endId = 250 ) {
+    var  t = 2, newEnd = 0 , startId = 1,
+    container , 
+    searchContainer ,
+    dataFloater,
+    balancerInnerWrapper,
+    searchInput;
+// pend controllers function that is responsible for all dom controller implementations 
     pendControllers(selectorId);
     container = $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-data-wrapper");
     searchContainer = $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-results-wrapper");
