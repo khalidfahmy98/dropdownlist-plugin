@@ -1,13 +1,11 @@
-
-var placeholder = "";
 // pend controllers function that is responsible for all dom controller implementations 
-function pendControllersDrop(selectorId) {
+function pendControllersdrop(selectorId) {
     placeholder = $(selectorId).html();
     $(selectorId).addClass("balancer-main-input form-control input-sm").parent("div").addClass("balancer-outer-wrapper");
-    $(selectorId).parent("div").append('<i class="fa fa-caret-down caretIcon balancer-icon" style="left: 14 % "></i>\
-        <div class= "balancer-inner-wrapper">\
+    $(selectorId).append('<i class="fa fa-caret-down caretIcon balancer-icon" ></i>');
+    $(selectorId).parent("div").append('<div class="balancer-inner-wrapper">\
         <header>\
-            <input type="text" class="form-control cairo input-sm balancer-searcher" placeholder="البحث في العناصر " />\
+            <input type="text" class="form-control  input-sm balancer-searcher" placeholder="البحث في العناصر " />\
             <i class="fa fa-times closeSearch" title="الغاء البحث " style="display:none;"></i>\
         </header>\
         <div class="balancer-data-wrapper data-floater"></div>\
@@ -15,30 +13,90 @@ function pendControllersDrop(selectorId) {
     return placeholder;
 }
 // reset drop down list value by using this function and global variable placeholder that always keep the original value
-function Resetdropdownlist(selectorId) {
-    $(selectorId).html(placeholder);
+function Resetdropdownlist(selectorId, resetValue = false) {
+    if (resetValue == true) {
+        $(selectorId).html($(selectorId).data('placeholded'));
+    } 
+    $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-data-wrapper").show();
+    $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-results-wrapper").hide();
+    $(selectorId).siblings(".balancer-inner-wrapper").slideUp();
 }
-// the main brain for the drop down list controllers 
-function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endParam, searchParam, hiddenRequests, visiableRequests, endId = 250 ) {
-    var  t = 2, newEnd = 0 , startId = 1,
-    container , 
-    searchContainer ,
-    dataFloater,
-    balancerInnerWrapper,
-    searchInput;
-// pend controllers function that is responsible for all dom controller implementations 
-    pendControllers(selectorId);
+// refresh the first call requests 
+function RefreshData(selectorId) {
+    var visiableRequests = $(selectorId).data("visiblerequests"),
+        hiddenRequests = $(selectorId).data("hiddenrequests") ,
+        startParam = $(selectorId).data("startparam"),
+        endId = $(selectorId).data("calllength") ,
+        endParam = $(selectorId).data("endparam") ,
+        dataApi = $(selectorId).data("dataapi"),
+        startId = 1, 
+        container = $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-data-wrapper");
+    // initial call for the first listed data  [ Api Tokens Reveiwed Here ]
+    $.ajax({
+        url: dataApi + "?" + startParam + "=" + startId + "&" + endParam + "=" + endId,
+        type: 'Get',
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            container.html("<span></span>");
+            container.append("<span class='balancer-item cancel-selection'>الغاء الاختيار </span>");
+            if (visiableRequests.length > 0 && visiableRequests.length <= 2) {
+                if (visiableRequests.length == 1) {
+                    $.each(data, function (i) {
+                        container.append("<span class='balancer-item'>" + data[i][visiableRequests[0]] + "</span>");
+                        for (var y = 0; y < hiddenRequests.length; y++) {
+                            container.children("span.balancer-item").last().data(hiddenRequests[y], data[i][hiddenRequests[y]]);
+                        }
+                        if (i === endId) {
+                            return false;
+                        }
+                    });
+                } else if (visiableRequests.length == 2) {
+                    $.each(data, function (i) {
+                        for (var j = 0; j < visiableRequests.length - 1; j++) {
+                            container.append("<span class='balancer-item'>" + data[i][visiableRequests[j]] + "-" + data[i][visiableRequests[j + 1]] + "</span>");
+                        }
+                        for (var y = 0; y < hiddenRequests.length; y++) {
+                            container.children("span.balancer-item").last().data(hiddenRequests[y], data[i][hiddenRequests[y]]);
+                        }
+                        if (i === endId) {
+                            return false;
+                        }
+                    });
+                }
+            } else {
+                console.error("Drop Down List : Visible Requests Array Cant be over 2 elements \n Review please Your 7th Argument in the plugin invoke");
+            }
+        }
+    });
+}
+// the main brain for the drop down list controllers
+function dropdownlist(selectorId, dataApi, searchApi, startParam, endParam, searchParam, hiddenRequests, visiableRequests, endId = 250) {
+    var t = 2, newEnd = 0, startId = 1,
+        container,
+        searchContainer,
+        dataFloater,
+        balancerInnerWrapper,
+        searchInput;
+    pendControllersdrop(selectorId);
+    $(selectorId).data("placeholded", $(selectorId).html());
+    $(selectorId).data("calllength", endId );
+    $(selectorId).data("endparam", endParam );
+    $(selectorId).data("startparam", startParam);
+    $(selectorId).data("dataapi", dataApi);
+    $(selectorId).data("visiblerequests", visiableRequests);
+    $(selectorId).data("hiddenrequests", hiddenRequests);
     container = $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-data-wrapper");
     searchContainer = $(selectorId).siblings(".balancer-inner-wrapper").children(".balancer-results-wrapper");
     dataFloater = $(selectorId).siblings(".balancer-inner-wrapper").children(".data-floater");
     balancerInnerWrapper = $(selectorId).siblings(".balancer-inner-wrapper");
     searchInput = $(selectorId).siblings(".balancer-inner-wrapper").children("header").children(".balancer-searcher");
     //  open dropdownlist content container 
-    $(selectorId).click(function () {
-        let iconToggler = $(this).siblings(".balancer-icon");
+    $(selectorId).click(function (event) {
+        event.stopPropagation();
+        let iconToggler = $(this).children(".balancer-icon");
         if (iconToggler.hasClass("fa-caret-down")) {
             $(this).siblings(".balancer-inner-wrapper").slideDown();
-            $(this).siblings(".balancer-inner-wrapper").children("header").children(".balancer-searcher").focus();
+            $(this).siblings(".balancer-inner-wrapper").children("header").children(".balancer-searcher");
             iconToggler.removeClass("fa-caret-down").addClass("fa-caret-up");
         } else {
             $(this).siblings(".balancer-inner-wrapper").slideUp();
@@ -46,7 +104,8 @@ function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endPara
         }
     });
     //  activate choosed data from balancer requested data  [ please review data tokens here ]
-    $(dataFloater).on("click", ".balancer-item", function () {
+    dataFloater.on("click", ".balancer-item", function () {
+      
         $(this).addClass("active-item").siblings(".balancer-item").removeClass("active-item");
         if (visiableRequests.length > 1) {
             $(this).parent("div").parent(".balancer-inner-wrapper").siblings(".balancer-main-input").html($(this).data(visiableRequests[0]) + " - " + $(this).data(visiableRequests[1]));
@@ -55,10 +114,11 @@ function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endPara
         }
         $(this).parent("div").parent(".balancer-inner-wrapper").siblings(".balancer-main-input").data($(this).data());
         $(this).parent("div").parent(".balancer-inner-wrapper").slideUp();
-        $(this).parent("div").parent(".balancer-inner-wrapper").siblings(".balancer-icon").removeClass("fa-caret-up").addClass("fa-caret-down");
+        $(this).parent("div").parent(".balancer-inner-wrapper").siblings(".balancer-main-input").append('<i class= "fa fa-caret-down caretIcon balancer-icon" ></i>');
         $(this).parent(".balancer-results-wrapper").parent(".balancer-inner-wrapper").slideUp();
+        //event.stopPropagation();
     });
-    $(balancerInnerWrapper).on("click", ".closeSearch", function () {
+    balancerInnerWrapper.on("click", ".closeSearch", function () {
         $(this).parent("header").siblings(".balancer-data-wrapper").show();
         $(this).parent("header").siblings(".balancer-results-wrapper").hide();
         $(this).hide();
@@ -69,6 +129,7 @@ function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endPara
         type: 'Get',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            container.append("<span class='balancer-item cancel-selection'>الغاء الاختيار </span>");
             if (visiableRequests.length > 0 && visiableRequests.length <= 2 ) {
                 if (visiableRequests.length == 1) {
                     $.each(data, function (i) {
@@ -101,9 +162,10 @@ function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endPara
     // scrolling mechansim and fetching data code  [ Api Tokens Reveiwed Here ]
     container.scroll(function () {
         if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-            newEnd = endId * t;
+            newEnd = parseInt(endId) * t;
             startId = newEnd - endId + 1;
             t++;
+            //alert(newEnd + "-" + startId);
             $.ajax({
                 url: dataApi + "?" + startParam + "=" + startId + "&" + endParam + "=" + newEnd,
                 type: 'Get',
@@ -192,6 +254,12 @@ function pendControllersDrop(selectorId, dataApi, searchApi, startParam, endPara
             }
         }
     });
+    // returning to the default situation before selecting element 
+    dataFloater.on("click", ".cancel-selection", function () {
+        Resetdropdownlist(selectorId , true );
+    });
 
 
 }
+
+
