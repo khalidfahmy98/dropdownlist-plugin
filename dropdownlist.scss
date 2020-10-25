@@ -109,26 +109,28 @@ $ph-form-styles: ( font-family: $gesLight-font, color: $main-color );
 .balancer-outer-wrapper {
     position: relative;
 
-    .caretIcon {
-        position: absolute;
-        left: 32px;
-        top: 32px;
-        color: $listmenu-color;
-    }
-
     .balancer-main-input {
         cursor: pointer;
+        position: relative;
+    }
+
+    .caretIcon {
+        position: absolute;
+        left: 7%;
+        top: 30%;
+        color: $listmenu-color;
     }
 
     .balancer-inner-wrapper {
         display: none;
         position: absolute;
-        margin-top: 10px;
-        left: 33px;
+        margin-top: 2px;
+        left: 2.5%;
         padding: 10px;
         border: 0.5px solid $font-menu-color;
         z-index: 9999;
-        width: 235px;
+        //      width: 235px;
+        width: 94.5%;
         overflow: hidden;
         border-radius: 5px;
         background-color: white;
@@ -137,12 +139,13 @@ $ph-form-styles: ( font-family: $gesLight-font, color: $main-color );
             padding-bottom: 10px;
             border-bottom: 0.5px solid $font-menu-color;
             position: relative;
+
             .closeSearch {
-                position:absolute;
-                left:15px;
-                top:9px;
-                color:$listmenu-color;
-                cursor:pointer;
+                position: absolute;
+                left: 25px;
+                top: 9px;
+                color: $listmenu-color;
+                cursor: pointer;
             }
         }
     }
@@ -172,6 +175,11 @@ $ph-form-styles: ( font-family: $gesLight-font, color: $main-color );
         &.active-item {
             background-color: $main-color;
             color: white;
+        }
+
+        &.cancel-selection{
+            color:$listmenu-color !important;
+            background-color:white !important;
         }
     }
 }
