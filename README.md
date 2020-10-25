@@ -47,4 +47,43 @@ $(PARENT-CLASS-OR-ID).on("click",".balancer-item",function(){ <br/>
     > $("#droploader").data("Id");     // will return the Id  <br/>
     > $("#droploader").data("Barcode");     // will return the BarCode <br/>
     
+ # Usage example 
+ -------------------------------------------------------
+ <link href="~/assets/css/loadbalance.css" rel="stylesheet" />
+<script src="~/assets/js/dropdownlist.js"></script>
+
+
+<div class="row">
+    <div class="form-group col-md-6 col-sm-6 col-xs-6 ">
+        <label>اختر العنصر </label>
+        <div id="droploader">اضغط هنا لاختيار العنصر </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        //$(document).click(function () {
+        //    Resetdropdownlist("#droploader");
+        //});
+        $(document).on('click', function (event) {
+            if (!$(event.target).closest('.balancer-inner-wrapper').length) {
+            Resetdropdownlist("#droploader");
+            }
+        });
+
+        dropdownlist(
+            "#droploader",
+            "/Item/APIItem",
+            "/Item/APIItemSearch",
+            "StartId",
+            "EndId",
+            "text",
+            ["Id", "BarCode", "Name"],
+            ["Name", "BarCode"],
+            50
+        );
+    })
+
+
  
